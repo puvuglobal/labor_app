@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import Image from 'next/image'
 
 export default function RootPage() {
   return (
@@ -14,13 +13,17 @@ export default function RootPage() {
       padding: '2rem',
       textAlign: 'center'
     }}>
-      <div style={{ position: 'relative', width: 200, height: 80, marginBottom: '1rem' }}>
-        <Image
-          src="/SEMA_LOGO_Login.png"
-          alt="SEMA Logo"
-          fill
-          style={{ objectFit: 'contain' }}
-        />
+      <div style={{ 
+        width: 120, 
+        height: 120, 
+        background: '#2563eb',
+        borderRadius: '8px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginBottom: '1rem'
+      }}>
+        <span style={{ color: 'white', fontSize: '1.5rem', fontWeight: 'bold' }}>LOGO</span>
       </div>
       <p style={{ color: '#666' }}>Employment Platform</p>
       <Link 
