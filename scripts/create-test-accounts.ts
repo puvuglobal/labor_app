@@ -19,59 +19,43 @@ const supabase = createClient(supabaseUrl, serviceRoleKey, {
 })
 
 async function createTestAccounts() {
+  console.log('=== Creating Test Accounts ===\n')
+  
   const testAccounts = [
-    {
-      email: 'admin@test.com',
-      password: 'TestPass123!@#',
-      role: 'admin',
-      first_name: 'Admin',
-      last_name: 'User'
-    },
-    {
-      email: 'client@test.com',
-      password: 'TestPass123!@#',
-      role: 'client',
-      first_name: 'VIP Client',
-      last_name: 'Company'
-    },
-    {
-      email: 'candidate@test.com',
-      password: 'TestPass123!@#',
-      role: 'candidate',
-      first_name: 'Candidate',
-      last_name: 'User'
-    }
+    { email: 'admin@test.com', password: 'TestPass123!@#', role: 'admin', first_name: 'Admin', last_name: 'User' },
+    { email: 'client@test.com', password: 'TestPass123!@#', role: 'client', first_name: 'VIP Client', last_name: 'Company' },
+    { email: 'candidate@test.com', password: 'TestPass123!@#', role: 'candidate', first_name: 'Candidate', last_name: 'User' }
   ]
-
-  console.log('Creating test accounts...')
 
   for (const account of testAccounts) {
     try {
+      console.log(`Creating ${account.role} account...`)
+      
       const { data, error } = await supabase.auth.admin.createUser({
         email: account.email,
         password: account.password,
         email_confirm: true,
-        user_metadata: {
-          role: account.role,
-          first_name: account.first_name,
-          last_name: account.last_name
-        }
+        user_metadata: { role: account.role, first_name: account.first_name, last_name: account.last_name }
       })
 
       if (error) {
-        console.log(`Error creating ${account.role}:`, error.message)
+        console.log(`  Error: ${error.message}`)
+        if (error.message.includes('duplicate')) {
+          console.log(`  Account already exists - will use existing`)
+        }
       } else {
-        console.log(`Created ${account.role} account:`, data.user?.id)
+        console.log(`  Success! User ID: ${data.user?.id}`)
       }
     } catch (e: any) {
-      console.log(`Exception for ${account.role}:`, e.message || e)
+      console.log(`  Exception: ${e.message}`)
     }
   }
 
-  console.log('\n=== TEST ACCOUNTS (Email Verified) ===')
-  console.log('Admin: admin@test.com / TestPass123!@#')
-  console.log('Client: client@test.com / TestPass123!@#')
-  console.log('Candidate: candidate@test.com / TestPass123!@#')
+  console.log('\n=== TEST CREDENTIALS ===')
+  console.log('Email: admin@test.com | Password: TestPass123!@# | Role: Admin')
+  console.log('Email: client@test.com | Password: TestPass123!@# | Role: VIP Client')  
+  console.log('Email: candidate@test.com | Password: TestPass123!@# | Role: Candidate')
+  console.log('\nNOTE: If login fails, run fix-policies.sql in Supabase first!')
 }
 
 createTestAccounts()

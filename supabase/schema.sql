@@ -277,54 +277,54 @@ ALTER TABLE candidate_recommendations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE user_uploads ENABLE ROW LEVEL SECURITY;
 
 -- Profiles policies
-CREATE POLICY IF NOT EXISTS IF NOT EXISTS "Profiles are viewable by owner and admins" ON profiles
+CREATE POLICY IF NOT EXISTS "Profiles are viewable by owner and admins" ON profiles
     FOR SELECT USING (auth.uid() = user_id OR EXISTS (SELECT 1 FROM profiles p2 WHERE p2.user_id = auth.uid() AND p2.role = 'admin'));
 
-CREATE POLICY IF NOT EXISTS IF NOT EXISTS "Users can update own profile" ON profiles
+CREATE POLICY IF NOT EXISTS "Users can update own profile" ON profiles
     FOR UPDATE USING (auth.uid() = user_id);
 
-CREATE POLICY IF NOT EXISTS IF NOT EXISTS "Admins can insert profiles" ON profiles
+CREATE POLICY IF NOT EXISTS "Admins can insert profiles" ON profiles
     FOR INSERT WITH CHECK (TRUE);
 
 -- Sessions policies
-CREATE POLICY IF NOT EXISTS IF NOT EXISTS "Users can manage own sessions" ON sessions
+CREATE POLICY IF NOT EXISTS "Users can manage own sessions" ON sessions
     FOR ALL USING (auth.uid() = user_id);
 
 -- Page registry - readable by all authenticated users
-CREATE POLICY IF NOT EXISTS IF NOT EXISTS "Page registry is viewable by all" ON page_registry
+CREATE POLICY IF NOT EXISTS "Page registry is viewable by all" ON page_registry
     FOR SELECT USING (TRUE);
 
 -- File registry - readable by all authenticated users
-CREATE POLICY IF NOT EXISTS IF NOT EXISTS "File registry is viewable by all" ON file_registry
+CREATE POLICY IF NOT EXISTS "File registry is viewable by all" ON file_registry
     FOR SELECT USING (TRUE);
 
 -- Tasks policies
-CREATE POLICY IF NOT EXISTS IF NOT EXISTS "Users can view own tasks" ON tasks
+CREATE POLICY IF NOT EXISTS "Users can view own tasks" ON tasks
     FOR SELECT USING (assigned_to = auth.uid() OR created_by = auth.uid());
 
-CREATE POLICY IF NOT EXISTS IF NOT EXISTS "Admins can manage all tasks" ON tasks
+CREATE POLICY IF NOT EXISTS "Admins can manage all tasks" ON tasks
     FOR ALL USING (EXISTS (SELECT 1 FROM profiles WHERE user_id = auth.uid() AND role = 'admin'));
 
 -- Task submissions policies
-CREATE POLICY IF NOT EXISTS IF NOT EXISTS "Users can manage own submissions" ON task_submissions
+CREATE POLICY IF NOT EXISTS "Users can manage own submissions" ON task_submissions
     FOR ALL USING (user_id = auth.uid());
 
-CREATE POLICY IF NOT EXISTS IF NOT EXISTS "Admins can review submissions" ON task_submissions
+CREATE POLICY IF NOT EXISTS "Admins can review submissions" ON task_submissions
     FOR ALL USING (EXISTS (SELECT 1 FROM profiles WHERE user_id = auth.uid() AND role = 'admin'));
 
 -- Trainings - readable by all
-CREATE POLICY IF NOT EXISTS IF NOT EXISTS "Trainings are viewable by all" ON trainings
+CREATE POLICY IF NOT EXISTS "Trainings are viewable by all" ON trainings
     FOR SELECT USING (TRUE);
 
 -- User trainings policies
-CREATE POLICY IF NOT EXISTS IF NOT EXISTS "Users can manage own training progress" ON user_trainings
+CREATE POLICY IF NOT EXISTS "Users can manage own training progress" ON user_trainings
     FOR ALL USING (user_id = auth.uid());
 
-CREATE POLICY IF NOT EXISTS IF NOT EXISTS "Admins can assign trainings" ON user_trainings
+CREATE POLICY IF NOT EXISTS "Admins can assign trainings" ON user_trainings
     FOR INSERT WITH CHECK (TRUE);
 
 -- Documentation stages - readable by all
-CREATE POLICY IF NOT EXISTS IF NOT EXISTS "Stages are viewable by all" ON documentation_stages
+CREATE POLICY IF NOT EXISTS "Stages are viewable by all" ON documentation_stages
     FOR SELECT USING (TRUE);
 
 -- User documentation policies
