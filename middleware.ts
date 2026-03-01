@@ -9,9 +9,16 @@ export async function middleware(request: NextRequest) {
     },
   })
 
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+  if (!supabaseUrl || !supabaseAnonKey) {
+    return response
+  }
+
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    supabaseUrl,
+    supabaseAnonKey,
     {
       cookies: {
         get(name: string) {
@@ -39,12 +46,22 @@ export async function middleware(request: NextRequest) {
     }
   )
 
-  const {
-    data: { session },
-  } = await supabase.auth.getSession()
+  try {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession()
 
-  if (!session && request.nextUrl.pathname.startsWith('/dashboard')) {
-    return NextResponse.redirect(new URL('/login', request.url))
+    const pathname = request.nextUrl.pathname
+
+    if (!session && pathname.startsWith('/dashboard')) {
+      return NextResponse.redirect(new URL('/login', request.url))
+    }
+
+    if (session && (pathname === '/login' || pathname === '/signup' || pathname === '/recover')) {
+      return NextResponse.redirect(new URL('/dashboard/home', request.url))
+    }
+  } catch (error) {
+    console.error('Middleware error:', error)
   }
 
   return response
