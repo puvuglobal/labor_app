@@ -143,7 +143,7 @@ export default function LoginPage() {
           </form>
 
           <Box sx={{ textAlign: 'center', mb: 2 }}>
-            <Link href="/recover" underline="hover" fontSize="small">
+            <Link href="/auth/recover" underline="hover" fontSize="small">
               Forgot your password?
             </Link>
           </Box>
@@ -151,7 +151,7 @@ export default function LoginPage() {
           <Box sx={{ textAlign: 'center', mb: 3 }}>
             <Typography variant="body2">
               Don&apos;t have an account?{' '}
-              <Link href="/signup" underline="hover" fontWeight={600}>
+              <Link href="/auth/signup" underline="hover" fontWeight={600}>
                 Sign Up
               </Link>
             </Typography>

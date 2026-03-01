@@ -323,7 +323,7 @@ export default function SignupPage() {
           <Box sx={{ textAlign: 'center', mt: 3 }}>
             <Typography variant="body2">
               Already have an account?{' '}
-              <Link href="/login" underline="hover" fontWeight={600}>
+              <Link href="/auth/login" underline="hover" fontWeight={600}>
                 Sign In
               </Link>
             </Typography>
