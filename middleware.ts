@@ -29,11 +29,11 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL('/login', request.url))
     }
 
-    if (session && pathname === '/login') {
+    if (session && (pathname === '/login' || pathname === '/')) {
       return NextResponse.redirect(new URL('/dashboard/home', request.url))
     }
   } catch (e) {
-    // Allow request to continue even if auth fails
+    // Allow request to continue
   }
 
   return res
@@ -41,9 +41,6 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    '/dashboard/:path*',
-    '/login',
-    '/signup',
-    '/recover',
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 }
