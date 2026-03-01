@@ -488,10 +488,10 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 -- Auto-create profile on user signup
 CREATE OR REPLACE FUNCTION handle_new_user()
 RETURNS TRIGGER AS $$
-DECLARE
-    new_profile_id TEXT;
 BEGIN
-    NEW.profile_id := generate_hex_id(5);
+    INSERT INTO profiles (user_id, profile_id, email, role, created_at, updated_at)
+    VALUES (NEW.id, generate_hex_id(5), NEW.email, 'candidate', NOW(), NOW())
+    ON CONFLICT (user_id) DO NOTHING;
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
