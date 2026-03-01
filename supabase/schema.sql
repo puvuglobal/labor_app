@@ -485,21 +485,28 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 -- TRIGGERS
 -- ============================================
 
--- Auto-create profile on user signup - SIMPLIFIED
+-- Auto-create profile on user signup - FIXED
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+
 CREATE OR REPLACE FUNCTION handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
-    -- Simple insert - let it fail silently if there's an issue
-    INSERT INTO profiles (user_id, profile_id, email, role)
-    VALUES (NEW.id, upper(md5(random()::text)::cstring), NEW.email, 'candidate')
-    ON CONFLICT (user_id) DO NOTHING;
+    INSERT INTO profiles (user_id, profile_id, email, role, created_at, updated_at)
+    VALUES (
+        NEW.id, 
+        upper(substring(md5(random()::text) from 1 for 5)),
+        NEW.email, 
+        COALESCE((NEW.raw_user_meta_data->>'role'), 'candidate'),
+        NOW(),
+        NOW()
+    );
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
--- Trigger for auto-creating profile
-DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 CREATE TRIGGER on_auth_user_created
+    AFTER INSERT ON auth.users
+    FOR EACH ROW EXECUTE FUNCTION handle_new_user();
     AFTER INSERT ON auth.users
     FOR EACH ROW EXECUTE FUNCTION handle_new_user();
 
