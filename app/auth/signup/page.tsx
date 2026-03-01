@@ -151,8 +151,8 @@ export default function SignupPage() {
         >
           <Box sx={{ textAlign: 'center', mb: 4 }}>
             <Box sx={{ 
-              width: 120, 
-              height: 120, 
+              width: 100, 
+              height: 100, 
               mx: 'auto', 
               mb: 2,
               display: 'flex',
@@ -161,7 +161,7 @@ export default function SignupPage() {
               bgcolor: 'primary.main',
               borderRadius: 2,
             }}>
-              <Typography variant="h4" fontWeight={700} color="white">
+              <Typography variant="h5" fontWeight={700} color="white" sx={{ lineHeight: 1 }}>
                 LOGO
               </Typography>
             </Box>

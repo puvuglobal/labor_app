@@ -14,8 +14,8 @@ export default function RootPage() {
       textAlign: 'center'
     }}>
       <div style={{ 
-        width: 120, 
-        height: 120, 
+        width: 100, 
+        height: 100, 
         background: '#2563eb',
         borderRadius: '8px',
         display: 'flex',
@@ -23,7 +23,7 @@ export default function RootPage() {
         justifyContent: 'center',
         marginBottom: '1rem'
       }}>
-        <span style={{ color: 'white', fontSize: '1.5rem', fontWeight: 'bold' }}>LOGO</span>
+        <span style={{ color: 'white', fontSize: '1.5rem', fontWeight: 'bold', lineHeight: 1 }}>LOGO</span>
       </div>
       <p style={{ color: '#666' }}>Employment Platform</p>
       <Link 
