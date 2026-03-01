@@ -1,74 +1,49 @@
-import { createServerClient, type CookieOptions } from '@supabase/ssr'
+import { createServerClient } from '@supabase/ssr'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 export async function middleware(request: NextRequest) {
-  let response = NextResponse.next({
-    request: {
-      headers: request.headers,
-    },
-  })
-
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-
-  if (!supabaseUrl || !supabaseAnonKey) {
-    return response
-  }
-
+  const res = NextResponse.next()
+  
   const supabase = createServerClient(
-    supabaseUrl,
-    supabaseAnonKey,
+    process.env.NEXT_PUBLIC_SUPABASE_URL ?? '',
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? '',
     {
       cookies: {
-        get(name: string) {
-          return request.cookies.get(name)?.value
+        get: (key) => request.cookies.get(key)?.value,
+        set: (key, value, options) => {
+          res.cookies.set(key, value, options)
         },
-        set(name: string, value: string, options: CookieOptions) {
-          request.cookies.set(name, value)
-          response = NextResponse.next({
-            request: {
-              headers: request.headers,
-            },
-          })
-          response.cookies.set(name, value, options)
-        },
-        remove(name: string, options: CookieOptions) {
-          request.cookies.set(name, '')
-          response = NextResponse.next({
-            request: {
-              headers: request.headers,
-            },
-          })
-          response.cookies.set(name, '', options)
+        remove: (key, options) => {
+          res.cookies.delete(key)
         },
       },
     }
   )
 
   try {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession()
-
+    const { data: { session } } = await supabase.auth.getSession()
     const pathname = request.nextUrl.pathname
 
     if (!session && pathname.startsWith('/dashboard')) {
       return NextResponse.redirect(new URL('/login', request.url))
     }
 
-    if (session && (pathname === '/login' || pathname === '/signup' || pathname === '/recover')) {
+    if (session && pathname === '/login') {
       return NextResponse.redirect(new URL('/dashboard/home', request.url))
     }
-  } catch (error) {
-    console.error('Middleware error:', error)
+  } catch (e) {
+    // Allow request to continue even if auth fails
   }
 
-  return response
+  return res
 }
 
 export const config = {
   matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    '/dashboard/:path*',
+    '/login',
+    '/signup',
+    '/recover',
   ],
 }
