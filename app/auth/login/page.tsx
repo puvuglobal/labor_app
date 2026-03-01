@@ -15,6 +15,7 @@ import {
   InputAdornment
 } from '@mui/material'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
+import Image from 'next/image'
 import { createClient } from '@/lib/supabase/client'
 
 export default function LoginPage() {
@@ -81,9 +82,14 @@ export default function LoginPage() {
           }}
         >
           <Box sx={{ textAlign: 'center', mb: 4 }}>
-            <Typography variant="h4" component="h1" fontWeight={700} color="primary.main">
-              Labor App
-            </Typography>
+            <Box sx={{ position: 'relative', width: 180, height: 60, mx: 'auto', mb: 2 }}>
+              <Image
+                src="/SEMA_LOGO_Login.png"
+                alt="SEMA Logo"
+                fill
+                style={{ objectFit: 'contain' }}
+              />
+            </Box>
             <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
               Sign in to your account
             </Typography>

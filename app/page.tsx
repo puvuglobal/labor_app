@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function RootPage() {
   return (
@@ -13,7 +14,14 @@ export default function RootPage() {
       padding: '2rem',
       textAlign: 'center'
     }}>
-      <h1 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>Labor App</h1>
+      <div style={{ position: 'relative', width: 200, height: 80, marginBottom: '1rem' }}>
+        <Image
+          src="/SEMA_LOGO_Login.png"
+          alt="SEMA Logo"
+          fill
+          style={{ objectFit: 'contain' }}
+        />
+      </div>
       <p style={{ color: '#666' }}>Employment Platform</p>
       <Link 
         href="/auth/login" 
