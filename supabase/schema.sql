@@ -108,8 +108,8 @@ CREATE TABLE IF NOT EXISTS user_trainings (
     user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
     training_id UUID NOT NULL REFERENCES trainings(id) ON DELETE CASCADE,
     is_completed BOOLEAN NOT NULL DEFAULT FALSE,
-    progress_percentage 0,
-    INTEGER NOT NULL DEFAULT completed_at TIMESTAMPTZ,
+    progress_percentage INTEGER NOT NULL DEFAULT 0,
+    completed_at TIMESTAMPTZ,
     assigned_by UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
     assigned_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     UNIQUE(user_id, training_id)
